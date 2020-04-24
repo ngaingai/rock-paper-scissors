@@ -6,27 +6,29 @@ function computerPlay() {
 function oneRound(playerSelection, computerSelection) {
     playerSelection = playerSelection.toLowerCase();
     let result = "You win!"
-    if (playerSelection == 'rock') {
-        if (computerSelection == 'paper') {
+    if (playerSelection == 'rock' && computerSelection == 'paper') {
             result = "You lose!";
-        } else if (computerSelection == 'rock') {
-            result = "It's a tie!";
-        }
-    } else if (playerSelection == 'paper') {
-        if (computerSelection == 'scissors') {
+            cScore++;
+        } else if (playerSelection == 'paper' && computerSelection == 'scissors') {
             result = "You lose!";
-        } else if (computerSelection == 'paper') {
-            result = "It's a tie!";
-        }
-    } else if (playerSelection == 'scissors') {
-        if (computerSelection == 'rock') {
+            cScore++;
+        } else if (playerSelection == 'scissors' && computerSelection == 'rock') {
             result = "You lose!";
-        } else if (computerSelection == 'scissors') {
+            cScore++;
+        } else if (playerSelection == computerSelection) {
             result = "It's a tie!";
+            tie++;
+        } else {
+            pScore++;
         }
-    }
 
-    return result;
+    let outcome = {
+        result: result,
+        pScore: pScore,
+        cScore: cScore,
+        tie: tie
+    };
+    return outcome;
 }
 
 let pScore = 0;
@@ -41,28 +43,20 @@ buttons.forEach((button) => {
     button.addEventListener('click', (e) => {
         let computerSelection = computerPlay();
         let playerSelection = button.id;
-        let result = oneRound(playerSelection, computerSelection);
-
-        if (result == "You win!") {
-                    pScore++;
-                } else if (result == "You lose!") {
-                    cScore++;
-                } else {
-                    tie++;
-        }
+        let outcome = oneRound(playerSelection, computerSelection);
 
         let p = document.createElement('p');
-        p.textContent = "You: " + playerSelection + " CPU: " + computerSelection + " -> " + result;
+        p.textContent = "You: " + playerSelection + " CPU: " + computerSelection + " -> " + outcome.result;
         results.appendChild(p);
         let cs = document.createElement('p');
-        cs.textContent = "Current Score: " + pScore + " - " + cScore + " - " + tie;
+        cs.textContent = "Current Score: " + outcome.pScore + " - " + outcome.cScore + " - " + outcome.tie;
         results.appendChild(cs);
 
-        if (pScore == 5) {
+        if (outcome.pScore == 5) {
             let final = document.createElement('p');
             final.textContent = "You're the winner!";
             results.appendChild(final);
-        } else if (cScore == 5) {
+        } else if (outcome.cScore == 5) {
             let final = document.createElement('p');
             final.textContent = "Computer wins!";
             results.appendChild(final);
